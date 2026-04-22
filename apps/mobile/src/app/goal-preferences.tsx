@@ -1,5 +1,6 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { refreshDashboardData } from "../lib/invalidateDashboard";
 import type { GoalPreference } from "../types/models";
 import { useAppStore } from "../store/appStore";
@@ -28,14 +29,19 @@ const OPTIONS: { value: GoalPreference; title: string; subtitle: string }[] = [
 ];
 
 export default function GoalPreferencesScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
+  const params = useLocalSearchParams<{ from?: string }>();
   const goalPreference = useAppStore((s) => s.goalPreference);
   const setGoalPreference = useAppStore((s) => s.setGoalPreference);
 
   function select(v: GoalPreference) {
     setGoalPreference(v);
     refreshDashboardData();
-    router.back();
+  }
+
+  function onSeeValue() {
+    router.replace("/dashboard");
   }
 
   return (
@@ -68,6 +74,19 @@ export default function GoalPreferencesScreen() {
           </Pressable>
         );
       })}
+
+      {params.from === "onboarding" ? (
+        <View style={[styles.footer, { paddingBottom: insets.bottom + 16 }]}>
+          <Pressable
+            onPress={onSeeValue}
+            style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
+            accessibilityRole="button"
+            accessibilityLabel="See my value"
+          >
+            <Text style={styles.ctaText}>See my value</Text>
+          </Pressable>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -127,5 +146,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#6b7280",
     lineHeight: 20,
+  },
+  footer: {
+    marginTop: "auto",
+    paddingTop: 12,
+    backgroundColor: "#f6f7fb",
+  },
+  cta: {
+    backgroundColor: "#2563eb",
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  ctaPressed: { opacity: 0.9 },
+  ctaText: {
+    color: "#fff",
+    fontSize: 17,
+    fontWeight: "700",
   },
 });

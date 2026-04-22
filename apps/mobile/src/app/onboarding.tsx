@@ -33,7 +33,7 @@ export default function OnboardingScreen() {
 
   function onContinue() {
     setHasCompletedOnboarding(true);
-    router.replace("/add-rewards");
+    router.replace("/add-rewards?from=onboarding");
   }
 
   return (

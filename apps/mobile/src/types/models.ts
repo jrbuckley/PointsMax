@@ -1,4 +1,4 @@
-export type RewardProgramType =
+export type RewardProgramId =
   | "CHASE_UR"
   | "AMEX_MR"
   | "CAPITAL_ONE_MILES"
@@ -6,7 +6,7 @@ export type RewardProgramType =
   | "CASHBACK";
 
 export type RewardBalance = {
-  program: RewardProgramType;
+  programId: RewardProgramId;
   amount: number;
 };
 

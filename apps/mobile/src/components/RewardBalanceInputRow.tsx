@@ -1,24 +1,35 @@
-import type { RewardProgramType } from "../types/models";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 type Props = {
   label: string;
   value: string;
   onChangeText: (text: string) => void;
-  program: RewardProgramType;
+  onRemove?: () => void;
 };
 
 export function RewardBalanceInputRow({
   label,
   value,
   onChangeText,
-  program: _program,
+  onRemove,
 }: Props) {
   return (
     <View style={styles.row}>
-      <Text style={styles.label} numberOfLines={2}>
-        {label}
-      </Text>
+      <View style={styles.left}>
+        <Text style={styles.label} numberOfLines={2}>
+          {label}
+        </Text>
+        {onRemove ? (
+          <Pressable
+            onPress={onRemove}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={`Remove ${label}`}
+          >
+            <Text style={styles.remove}>Remove</Text>
+          </Pressable>
+        ) : null}
+      </View>
       <TextInput
         style={styles.input}
         placeholder="0"
@@ -42,11 +53,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: "#e5e7eb",
   },
-  label: {
+  left: {
     flex: 1,
+    gap: 4,
+  },
+  label: {
     fontSize: 15,
     color: "#374151",
     fontWeight: "500",
+  },
+  remove: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#2563eb",
   },
   input: {
     minWidth: 120,

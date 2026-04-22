@@ -1,21 +1,28 @@
-import type { RewardBalance, RewardProgramType } from "../types/models";
+import type { RewardBalance, RewardProgramId } from "../types/models";
 
-export const ALL_PROGRAMS: RewardProgramType[] = [
-  "CHASE_UR",
-  "AMEX_MR",
-  "CAPITAL_ONE_MILES",
-  "CITI_TY",
-  "CASHBACK",
-];
-
-export const PROGRAM_LABELS: Record<RewardProgramType, string> = {
-  CHASE_UR: "Chase Ultimate Rewards",
-  AMEX_MR: "American Express Membership Rewards",
-  CAPITAL_ONE_MILES: "Capital One Miles",
-  CITI_TY: "Citi ThankYou Points",
-  CASHBACK: "Cash back / statement credit",
+export type ProgramCatalogItem = {
+  id: RewardProgramId;
+  label: string;
 };
 
+export const PROGRAM_CATALOG: ProgramCatalogItem[] = [
+  { id: "AMEX_MR", label: "Amex Membership Rewards" },
+  { id: "CHASE_UR", label: "Chase Ultimate Rewards" },
+  { id: "CAPITAL_ONE_MILES", label: "Capital One Miles" },
+  { id: "CITI_TY", label: "Citi ThankYou Points" },
+  { id: "CASHBACK", label: "Cash back / statement credit" },
+];
+
+export const PROGRAM_LABELS: Record<RewardProgramId, string> = PROGRAM_CATALOG.reduce(
+  (acc, p) => {
+    acc[p.id] = p.label;
+    return acc;
+  },
+  {} as Record<RewardProgramId, string>,
+);
+
+export const PROGRAM_IDS: RewardProgramId[] = PROGRAM_CATALOG.map((p) => p.id);
+
 export function emptyBalances(): RewardBalance[] {
-  return ALL_PROGRAMS.map((program) => ({ program, amount: 0 }));
+  return [];
 }

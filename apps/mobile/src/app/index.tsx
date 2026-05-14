@@ -1,10 +1,12 @@
 import { Redirect } from "expo-router";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useHydration } from "../hooks/useHydration";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useStoresHydrated } from "../hooks/useStoresHydrated";
 import { useAppStore } from "../store/appStore";
+import { useAuthStore } from "../store/authStore";
 
 export default function Index() {
-  const hydrated = useHydration();
+  const hydrated = useStoresHydrated();
+  const user = useAuthStore((s) => s.user);
   const hasCompletedOnboarding = useAppStore(
     (s) => s.hasCompletedOnboarding,
   );
@@ -12,9 +14,15 @@ export default function Index() {
   if (!hydrated) {
     return (
       <View style={styles.boot}>
-        <ActivityIndicator size="large" color="#2563eb" />
+        <Text style={styles.brand}>Points value</Text>
+        <ActivityIndicator size="large" color="#2563eb" style={styles.spinner} />
+        <Text style={styles.hint}>Loading…</Text>
       </View>
     );
+  }
+
+  if (!user) {
+    return <Redirect href="/login" />;
   }
 
   if (!hasCompletedOnboarding) {
@@ -30,5 +38,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#f6f7fb",
+    paddingHorizontal: 32,
+  },
+  brand: {
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#111827",
+    marginBottom: 20,
+  },
+  spinner: {
+    marginBottom: 12,
+  },
+  hint: {
+    fontSize: 15,
+    color: "#6b7280",
   },
 });

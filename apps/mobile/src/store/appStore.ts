@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { emptyBalances } from "../constants/programs";
 import type { GoalPreference, RewardBalance } from "../types/models";
+import { useAuthStore } from "./authStore";
 
 type AppState = {
   hasCompletedOnboarding: boolean;
@@ -25,12 +26,14 @@ export const useAppStore = create<AppState>()(
       setGoalPreference: (v) => set({ goalPreference: v }),
       setRewardBalances: (balances) => set({ rewardBalances: balances }),
       resetOnboarding: () => set({ hasCompletedOnboarding: false }),
-      clearAllData: () =>
+      clearAllData: () => {
+        useAuthStore.getState().clearMockRegistration();
         set({
           hasCompletedOnboarding: false,
           goalPreference: "KEEP_IT_SIMPLE",
           rewardBalances: emptyBalances(),
-        }),
+        });
+      },
     }),
     {
       name: "points-exchange-storage",

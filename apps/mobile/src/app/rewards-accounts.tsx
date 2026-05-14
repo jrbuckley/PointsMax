@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -12,7 +12,11 @@ import {
   View,
 } from "react-native";
 import { RewardBalanceInputRow } from "../components/RewardBalanceInputRow";
-import { PROGRAM_CATALOG, PROGRAM_LABELS } from "../constants/programs";
+import {
+  PROGRAM_CATALOG,
+  PROGRAM_IDS,
+  PROGRAM_LABELS,
+} from "../constants/programs";
 import { refreshDashboardData } from "../lib/invalidateDashboard";
 import type { RewardBalance, RewardProgramId } from "../types/models";
 import {
@@ -20,7 +24,6 @@ import {
   parseAmountInput,
 } from "../utils/format";
 import { useAppStore } from "../store/appStore";
-import { PROGRAM_IDS } from "../constants/programs";
 
 function buildInitialStrings(balances: RewardBalance[]) {
   const out: Record<string, string> = {};
@@ -42,7 +45,6 @@ function normalizeSelectedPrograms(balances: RewardBalance[]): RewardProgramId[]
 }
 
 export default function RewardsAccountsScreen() {
-  const router = useRouter();
   const rewardBalances = useAppStore((s) => s.rewardBalances);
   const setRewardBalances = useAppStore((s) => s.setRewardBalances);
 
@@ -100,7 +102,11 @@ export default function RewardsAccountsScreen() {
     }));
     setRewardBalances(next);
     refreshDashboardData();
-    router.back();
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/dashboard");
+    }
   }
 
   return (

@@ -2,11 +2,13 @@ import { useRouter } from "expo-router";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { refreshDashboardData } from "../lib/invalidateDashboard";
 import { useAppStore } from "../store/appStore";
+import { useAuthStore } from "../store/authStore";
 
 export default function SettingsScreen() {
   const router = useRouter();
   const resetOnboarding = useAppStore((s) => s.resetOnboarding);
   const clearAllData = useAppStore((s) => s.clearAllData);
+  const signOut = useAuthStore((s) => s.signOut);
 
   function onResetOnboarding() {
     Alert.alert(
@@ -30,7 +32,7 @@ export default function SettingsScreen() {
   function onClearData() {
     Alert.alert(
       "Clear all data?",
-      "This removes balances, goals, and onboarding progress on this device.",
+      "This removes your mock account, balances, goals, and onboarding progress on this device.",
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -39,11 +41,26 @@ export default function SettingsScreen() {
           onPress: () => {
             clearAllData();
             refreshDashboardData();
-            router.replace("/onboarding");
+            router.replace("/login");
           },
         },
       ],
     );
+  }
+
+  function onSignOut() {
+    Alert.alert("Sign out?", "You can sign in again with the same email and password.", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Sign out",
+        style: "destructive",
+        onPress: () => {
+          signOut();
+          refreshDashboardData();
+          router.replace("/login");
+        },
+      },
+    ]);
   }
 
   return (
@@ -58,6 +75,18 @@ export default function SettingsScreen() {
           simple tradeoffs—not sell you new cards.
         </Text>
         <Text style={styles.meta}>Version 1.0 (preview)</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Account</Text>
+        <Pressable
+          onPress={onSignOut}
+          style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+          accessibilityRole="button"
+        >
+          <Text style={styles.rowTitle}>Sign out</Text>
+          <Text style={styles.rowSub}>End this session (mock account stays on device)</Text>
+        </Pressable>
       </View>
 
       <View style={styles.section}>

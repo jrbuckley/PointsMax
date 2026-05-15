@@ -13,7 +13,7 @@ type AppState = {
   setGoalPreference: (v: GoalPreference) => void;
   setRewardBalances: (balances: RewardBalance[]) => void;
   resetOnboarding: () => void;
-  clearAllData: () => void;
+  clearAllData: () => Promise<void>;
 };
 
 export const useAppStore = create<AppState>()(
@@ -26,8 +26,8 @@ export const useAppStore = create<AppState>()(
       setGoalPreference: (v) => set({ goalPreference: v }),
       setRewardBalances: (balances) => set({ rewardBalances: balances }),
       resetOnboarding: () => set({ hasCompletedOnboarding: false }),
-      clearAllData: () => {
-        useAuthStore.getState().clearMockRegistration();
+      clearAllData: async () => {
+        await useAuthStore.getState().clearMockRegistration();
         set({
           hasCompletedOnboarding: false,
           goalPreference: "KEEP_IT_SIMPLE",

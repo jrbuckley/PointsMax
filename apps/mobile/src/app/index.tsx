@@ -1,11 +1,11 @@
 import { Redirect } from "expo-router";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { useStoresHydrated } from "../hooks/useStoresHydrated";
+import { useAppBootstrapReady } from "../hooks/useAppBootstrapReady";
 import { useAppStore } from "../store/appStore";
 import { useAuthStore } from "../store/authStore";
 
 export default function Index() {
-  const hydrated = useStoresHydrated();
+  const hydrated = useAppBootstrapReady();
   const user = useAuthStore((s) => s.user);
   const hasCompletedOnboarding = useAppStore(
     (s) => s.hasCompletedOnboarding,

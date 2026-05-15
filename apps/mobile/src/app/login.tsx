@@ -49,7 +49,7 @@ export default function LoginScreen() {
     >
       <View style={[styles.screen, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]}>
         <Text style={styles.brand}>Points value</Text>
-        <Text style={styles.lead}>Sign in to continue (mock — no server yet).</Text>
+        <Text style={styles.lead}>Sign in to continue.</Text>
 
         <View style={styles.field}>
           <Text style={styles.label}>Email</Text>

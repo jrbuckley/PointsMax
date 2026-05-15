@@ -37,8 +37,16 @@ export default function SignUpScreen() {
       displayName: displayName.trim() || undefined,
     });
     setSubmitting(false);
-    if (!result.ok) {
-      setError(result.error);
+    if (result.outcome === "error") {
+      setError(result.message);
+      return;
+    }
+    if (result.outcome === "check_email") {
+      setHasCompletedOnboarding(false);
+      router.replace({
+        pathname: "/verify-email",
+        params: { email: result.email },
+      });
       return;
     }
     setHasCompletedOnboarding(false);
@@ -54,7 +62,8 @@ export default function SignUpScreen() {
       <View style={[styles.screen, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]}>
         <Text style={styles.brand}>Create account</Text>
         <Text style={styles.lead}>
-          Mock sign-up — stored on this device only until we connect Supabase.
+          Create your account. We’ll email you a link if your project requires email
+          verification.
         </Text>
 
         <View style={styles.field}>

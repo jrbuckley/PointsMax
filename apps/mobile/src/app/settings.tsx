@@ -32,14 +32,14 @@ export default function SettingsScreen() {
   function onClearData() {
     Alert.alert(
       "Clear all data?",
-      "This removes your mock account, balances, goals, and onboarding progress on this device.",
+      "This removes your account session, balances, goals, and onboarding progress on this device.",
       [
         { text: "Cancel", style: "cancel" },
         {
           text: "Clear",
           style: "destructive",
-          onPress: () => {
-            clearAllData();
+          onPress: async () => {
+            await clearAllData();
             refreshDashboardData();
             router.replace("/login");
           },
@@ -54,8 +54,8 @@ export default function SettingsScreen() {
       {
         text: "Sign out",
         style: "destructive",
-        onPress: () => {
-          signOut();
+        onPress: async () => {
+          await signOut();
           refreshDashboardData();
           router.replace("/login");
         },
@@ -85,7 +85,7 @@ export default function SettingsScreen() {
           accessibilityRole="button"
         >
           <Text style={styles.rowTitle}>Sign out</Text>
-          <Text style={styles.rowSub}>End this session (mock account stays on device)</Text>
+          <Text style={styles.rowSub}>End this session</Text>
         </Pressable>
       </View>
 
